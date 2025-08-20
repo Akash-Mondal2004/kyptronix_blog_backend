@@ -22,10 +22,29 @@ const uploadRoutes = require('./routes/uploadRoutes');
 
 // Middleware
 const corsOptions = {
-  origin: process.env.CLIENT_URL || 'http://localhost:8080',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or Postman)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      process.env.CLIENT_URL,
+      'http://localhost:8080', // Development
+      'http://localhost:3000', // Alternative dev port
+      'https://kyptronix-blog-frontend.vercel.app', // Production Vercel
+      'https://kyptronix-blog-frontend-git-main-akash-mondal2004.vercel.app', // Vercel branch
+      'https://kyptronix-blog-frontend-akash-mondal2004.vercel.app' // Vercel subdomain
+    ].filter(Boolean); // Remove any undefined values
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
