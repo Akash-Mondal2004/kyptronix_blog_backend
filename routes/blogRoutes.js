@@ -4,8 +4,9 @@ const blogController = require('../controllers/blogController');
 
 router.post('/', blogController.createBlog);
 router.get('/', blogController.getBlogs);
-router.get('/:id', blogController.getBlogById);
-router.put('/:id', blogController.updateBlog);
-router.delete('/:id', blogController.deleteBlog);
+// Unified routes for both ID and Link (must come after specific routes)
+router.get('/:identifier', blogController.getBlogByIdOrLink);
+router.put('/:identifier', blogController.updateBlogByIdOrLink);
+router.delete('/:identifier', blogController.deleteBlogByIdOrLink);
 
 module.exports = router;

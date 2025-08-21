@@ -17,7 +17,8 @@ const BlogSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    index: true // Add index for better search performance
   },
   metatile: {
     type: String
